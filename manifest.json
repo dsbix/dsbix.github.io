@@ -5,7 +5,7 @@
     "background_color": "#ffffff",
     "display": "standalone",
     "scope": "/",
-    "start_url": "https://veoh.online/",
+    "start_url": "https://dsb.veoh.online/",
     "icons": [
         {
             "src": "https://pushy.me/img/pwa/icon-192x192.png",
