@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <link rel="manifest" href="/manifest.json" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DSB API</title>
@@ -80,38 +79,19 @@
             }
         }
     </style>
-</head>
-
-<body>
-    <h1>DSB API</h1>
-    <div class="day-card" id="todayCard">
-        <div class="day-title">Heute</div>
-        <div class="day-content" id="todayContent">
-            <div class="loader"></div> <!-- Ladekreis -->
-        </div>
-    </div>
-    <div class="day-card" id="tomorrowCard">
-        <div class="day-title">Morgen</div>
-        <div class="day-content" id="tomorrowContent">
-            <div class="loader"></div> <!-- Ladekreis -->
-        </div>
-    </div>
-
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
     <script>
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    OneSignalDeferred.push(function(OneSignal) {
-        OneSignal.init({
-        appId: "0d70fda4-f9b3-4dd0-93f0-f4fa20cdb101",
-        safari_web_id: "web.onesignal.auto.0a17e090-f65a-43cf-871a-056959ed633a",
-        notifyButton: {
-            enable: true,
-        },
+        var OneSignal = window.OneSignal || [];
+        OneSignal.push(function() {
+            OneSignal.init({
+                appId: "5b9db830-40e5-45ef-87fe-cefc7bb94569",
+                safari_web_id: "web.onesignal.auto.1712c17c-fc63-40e3-8bdd-b2b50281099d",
+                notifyButton: {
+                    enable: true,
+                }
+            });
         });
-    });
-    </script>
 
-    <script>
         document.addEventListener("DOMContentLoaded", function() {
             const days = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
             const today = new Date().getDay(); // Heutiger Wochentag (0-6)
@@ -149,6 +129,13 @@
                         return `<p><strong>Stunde:</strong> ${entry.lesson}, <strong>Fach:</strong> ${entry.new_subject}, <strong>Raum:</strong> ${entry.room}, <strong>Lehrer:</strong> ${entry.teacher}, <strong>Grund:</strong> ${entry.type}, <strong>Text:</strong> ${entry.text}</p>`;
                     }).join("");
                     contentDiv.innerHTML = entries;
+
+                    // Sende Push-Benachrichtigung bei Änderung der API-Daten
+                    OneSignal.push(function() {
+                        OneSignal.sendTag("apiChange", "true").then(function(tagsSent) {
+                            console.log("API-Daten haben sich geändert. Push-Benachrichtigung gesendet.");
+                        });
+                    });
                 }
             }
 
@@ -172,5 +159,22 @@
                 .catch(error => console.error('Fehler beim Anzeigen der Daten für morgen:', error.message));
         });
     </script>
-</body>
+</head>
+<body>
+    <h1>DSB API</h1>
+    <div class="day-card" id="todayCard">
+        <div class="day-title">Heute</div>
+        <div class="day-content" id="todayContent">
+            <div class="loader"></div> <!-- Ladekreis -->
+        </div>
+    </div>
+    <div class="day-card" id="tomorrowCard">
+        <div class="
+        day-title">Morgen</div>
+        <div class="day-content" id="tomorrowContent">
+        <div class="loader"></div> <!-- Ladekreis -->
+        </div>
+        </div>
+        
+ </body>
 </html>
