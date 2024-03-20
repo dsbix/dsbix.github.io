@@ -8,7 +8,7 @@
         body {
             background-color: #f4f4f4;
             color: #333;
-            font-family: 'Futura', sans-serif;
+            font-family: 'Futura', sans-serif; /* Futura-Schriftart hinzugefügt */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -29,11 +29,11 @@
             margin-top: 20px;
             border-radius: 10px;
             box-shadow: 
-                0 0 12px 3px rgba(119, 0, 255, 0.4),
-                0 0 10px rgba(119, 0, 255, 0.4) inset;
+                0 0 12px 3px rgba(119, 0, 255, 0.4), /* Roter Glow-Effekt mit verringerte Opazität */
+                0 0 10px rgba(119, 0, 255, 0.4) inset; /* Körniger Effekt mit verringerte Opazität */
             text-align: center;
             max-width: 80%;
-            position: relative;
+            position: relative; /* Positionierung relativ für den Ladekreis */
             transition: transform 0.3s ease;
         }
 
@@ -51,15 +51,15 @@
         }
 
         .loader {
-            position: absolute;
-            top: calc(50% + 6px);
-            left: calc(50% - 10px);
-            transform: translate(-50%, -50%) scale(0.85);
+            position: absolute; /* Positionierung absolut für den Ladekreis */
+            top: calc(50% + 6px); /* Zentrierung vertikal und 15 Pixel nach unten */
+            left: calc(50% - 10px); /* Zentrierung horizontal und 14 Pixel nach links */
+            transform: translate(-50%, -50%) scale(0.85); /* Zentrierung in der Mitte und 15% verkleinern */
             border: 4px solid #f3f3f3;
             border-top: 4px solid #a200ff65;
             border-radius: 50%;
-            width: 14px;
-            height: 14px;
+            width: 14px; /* Originalgröße */
+            height: 14px; /* Originalgröße */
             animation: spin 2s linear infinite;
         }
 
@@ -68,6 +68,7 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* Dunkle Themenfarben für den Dunkelmodus */
         @media (prefers-color-scheme: dark) {
             body {
                 background-color: #222;
@@ -79,29 +80,34 @@
         }
     </style>
 </head>
+
 <body>
     <h1>DSB API</h1>
     <div class="day-card" id="todayCard">
         <div class="day-title">Heute</div>
         <div class="day-content" id="todayContent">
-            <div class="loader"></div>
+            <div class="loader"></div> <!-- Ladekreis -->
         </div>
     </div>
     <div class="day-card" id="tomorrowCard">
         <div class="day-title">Morgen</div>
         <div class="day-content" id="tomorrowContent">
-            <div class="loader"></div>
+            <div class="loader"></div> <!-- Ladekreis -->
         </div>
     </div>
+
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+    <script src="/OneSignalSDKWorker.js"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const days = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
-            const today = new Date().getDay();
-            const tomorrow = (today + 1) % 7;
+            const today = new Date().getDay(); // Heutiger Wochentag (0-6)
+            const tomorrow = (today + 1) % 7; // Wochentag von morgen
 
+            // Funktion zum Abrufen der API-Daten
             async function fetchData(dayId) {
-                const klasse = '10a';
+                const klasse = '10a'; // Hier die Klasse festlegen
                 const url = `https://api.veoh.online/fetch_entries?klasse=${klasse}&day=${dayId}`;
 
                 try {
@@ -119,6 +125,7 @@
                 }
             }
 
+            // Funktion zum Anzeigen der Daten oder des Ladekreises
             async function displayData(cardId, data) {
                 const cardContent = document.getElementById(cardId);
                 const contentDiv = cardContent.querySelector('.day-content');
@@ -133,35 +140,24 @@
                 }
             }
 
+            // Ladekreis anzeigen, während auf die API-Daten gewartet wird
             document.querySelectorAll('.loader').forEach(loader => loader.style.display = 'block');
 
+            // API-Daten für heute abrufen und anzeigen
             fetchData(days[today])
                 .then(data => {
                     displayData('todayCard', data);
-                    document.getElementById('todayCard').querySelector('.loader').style.display = 'none';
+                    document.getElementById('todayCard').querySelector('.loader').style.display = 'none'; // Ladekreis ausblenden
                 })
                 .catch(error => console.error('Fehler beim Anzeigen der Daten für heute:', error.message));
 
+            // API-Daten für morgen abrufen und anzeigen
             fetchData(days[tomorrow])
                 .then(data => {
                     displayData('tomorrowCard', data);
-                    document.getElementById('tomorrowCard').querySelector('.loader').style.display = 'none';
+                    document.getElementById('tomorrowCard').querySelector('.loader').style.display = 'none'; // Ladekreis ausblenden
                 })
                 .catch(error => console.error('Fehler beim Anzeigen der Daten für morgen:', error.message));
-        });
-    </script>
-
-    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
-    <script>
-        var OneSignal = window.OneSignal || [];
-        OneSignal.push(function() {
-            OneSignal.init({
-                appId: "72fd64b0-067e-4b77-9203-14ff9b484770",
-                safari_web_id: "web.onesignal.auto.370dd028-ab8a-4720-9087-4e2c917686de",
-                notifyButton: {
-                    enable: true,
-                }
-            });
         });
     </script>
 </body>
