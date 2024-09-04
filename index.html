@@ -134,7 +134,7 @@
             const tomorrow = (today + 1) % 7;
 
             async function fetchData(dayId, klasse) {
-                const url = `https://api.veoh.online/fetch_entries?klasse=${klasse}&day=${dayId}`;
+                const url = `https://api.t1.wtf/fetch_entries?klasse=${klasse}&day=${dayId}`;
 
                 try {
                     const response = await fetch(url);
